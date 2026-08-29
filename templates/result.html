@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESUME SKILL ENTITY EXTRACTOR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell dashboard-page">
+        <header class="topbar">
+            <a class="brand" href="/"><span class="brand-mark">R</span><span>RESUME SKILL ENTITY EXTRACTOR</span></a>
+            <div class="header-actions">
+                <a class="new-scan" href="/history">View history</a>
+                <a class="new-scan" href="/">+ New analysis</a>
+            </div>
+        </header>
+
+        <div class="dashboard-heading">
+            <div>
+                <p class="eyebrow">Analysis complete</p>
+                <h1>Your resume snapshot</h1>
+                <p class="muted">A quick read on your current skills and career alignment.</p>
+            </div>
+            <span class="date-label">LIVE RESULT</span>
+        </div>
+
+        <section class="metrics-grid">
+            <article class="metric-card score-card">
+                <div class="score-ring"><span>{{ score }}</span></div>
+                <div><p class="metric-label">Resume score</p><h2>Out of 100</h2><p class="metric-help">Based on skills and resume sections</p></div>
+            </article>
+            <article class="metric-card accent-card">
+                <p class="metric-label">Skills detected</p>
+                <strong>{{ skills|length }}</strong>
+                <p class="metric-help">Technical capabilities found in your CV</p>
+            </article>
+            <article class="metric-card warm-card">
+                <p class="metric-label">Roles evaluated</p>
+                <strong>{{ job_matches|length }}</strong>
+                <p class="metric-help">Career paths compared against your profile</p>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel skills-panel">
+                <div class="panel-heading"><div><p class="eyebrow">Your toolkit</p><h2>Extracted skills</h2></div><span class="count-badge">{{ skills|length }}</span></div>
+                <div class="skill-cloud">
+                    {% for skill in skills %}<span>{{ skill }}</span>{% else %}<p class="muted">No skills were detected.</p>{% endfor %}
+                </div>
+            </article>
+
+            <article class="panel breakdown-panel">
+                <div class="panel-heading"><div><p class="eyebrow">Scoring model</p><h2>Score breakdown</h2></div></div>
+                <div class="breakdown-list">
+                    {% for category, values in score_breakdown.items() %}
+                        <div class="breakdown-item"><div><span>{{ category }}</span><b>{{ values[0] }}/{{ values[1] }}</b></div><progress class="progress" value="{{ values[0] }}" max="{{ values[1] }}">{{ values[0] }}/{{ values[1] }}</progress></div>
+                    {% endfor %}
+                </div>
+            </article>
+        </section>
+
+        {% if jd_analysis %}
+            <section class="panel jd-panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">JD analysis</p>
+                        <h2>{% if jd_analysis.job_title %}{{ jd_analysis.job_title }}{% else %}Job description match{% endif %}</h2>
+                    </div>
+                    <span class="count-badge">{{ jd_analysis.match_percentage }}%</span>
+                </div>
+
+                <div class="jd-summary">
+                    <div class="jd-score-box">
+                        <strong>{{ jd_analysis.match_percentage }}%</strong>
+                        <span>Role match</span>
+                    </div>
+                    <div class="jd-list-wrap">
+                        <div class="jd-list">
+                            <h3>Matched skills</h3>
+                            {% if jd_analysis.matched_skills %}
+                                <ul>
+                                    {% for skill in jd_analysis.matched_skills %}
+                                        <li>{{ skill }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="muted">No matching skills found in the job description.</p>
+                            {% endif %}
+                        </div>
+                        <div class="jd-list">
+                            <h3>Missing skills</h3>
+                            {% if jd_analysis.missing_skills %}
+                                <ul>
+                                    {% for skill in jd_analysis.missing_skills %}
+                                        <li>{{ skill }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p class="muted">No major gaps found.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+
+        {% if ats_analysis %}
+            <section class="panel ats-panel">
+                <div class="panel-heading">
+                    <div>
+                        <p class="eyebrow">ATS check</p>
+                        <h2>Application tracking score</h2>
+                    </div>
+                    <span class="count-badge">{{ ats_analysis.ats_score }}%</span>
+                </div>
+
+                <div class="ats-summary">
+                    <div class="jd-score-box ats-box">
+                        <strong>{{ ats_analysis.ats_score }}%</strong>
+                        <span>ATS score</span>
+                    </div>
+
+                    <div class="ats-metrics">
+                        <div><span>Keyword coverage</span><strong>{{ ats_analysis.keyword_score }}%</strong></div>
+                        <div><span>Section structure</span><strong>{{ ats_analysis.section_score }}%</strong></div>
+                        <div><span>Formatting</span><strong>{{ ats_analysis.formatting_score }}%</strong></div>
+                        <div><span>Clarity</span><strong>{{ ats_analysis.clarity_score }}%</strong></div>
+                    </div>
+                </div>
+
+                <div class="ats-tips">
+                    <h3>ATS recommendations</h3>
+                    <ul>
+                        {% for tip in ats_analysis.recommendations %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="panel roles-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Career alignment</p><h2>Job role match</h2></div><span class="muted">Based on extracted skills</span></div>
+            <div class="role-grid">
+                {% for role, percentage in job_matches.items() %}
+                    <div class="role-card"><div class="role-top"><strong>{{ role }}</strong><b>{{ percentage }}%</b></div><progress class="progress" value="{{ percentage }}" max="100">{{ percentage }}%</progress></div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESUME SKILL ENTITY EXTRACTOR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell upload-page">
+        <header class="topbar">
+            <a class="brand" href="/">
+                <span class="brand-mark">R</span>
+                <span>RESUME SKILL ENTITY EXTRACTOR</span>
+            </a>
+            <div class="header-actions">
+                <a class="new-scan" href="/history">View history</a>
+                <span class="status-pill"><span></span> Skill intelligence</span>
+            </div>
+        </header>
+
+        <section class="welcome-grid">
+            <div class="intro-copy">
+                <p class="eyebrow">Resume analysis workspace</p>
+                <h1>Understand your resume. <em>Shape your future.</em></h1>
+                <p class="intro-text">Extract your strongest skills, measure resume quality, and discover the career paths that fit your profile.</p>
+                <div class="feature-row">
+                    <span>01 <b>Extract</b></span>
+                    <span>02 <b>Score</b></span>
+                    <span>03 <b>Match</b></span>
+                </div>
+            </div>
+
+            <div class="upload-card">
+                <div class="card-heading">
+                    <div>
+                        <p class="eyebrow">Start a new scan</p>
+                        <h2>Upload your resume</h2>
+                    </div>
+                    <span class="upload-icon">↥</span>
+                </div>
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <label class="drop-zone" for="resume">
+                        <span class="file-symbol">PDF<br><small>DOCX</small></span>
+                        <strong id="file-name">Choose a resume file</strong>
+                        <span id="file-help">PDF or DOCX · up to 5 MB</span>
+                        <input id="resume" type="file" name="resume" accept=".pdf,.docx" required>
+                    </label>
+
+                    <div class="job-fields">
+                        <label for="job_role">Target role</label>
+                        <select id="job_role" name="job_role">
+                            <option value="">Optional: choose a role</option>
+                            <option>Software Developer</option>
+                            <option>Python Developer</option>
+                            <option>Full Stack Developer</option>
+                            <option>Data Analyst</option>
+                            <option>Data Scientist</option>
+                        </select>
+
+                        <label for="job_description">Job description</label>
+                        <textarea id="job_description" name="job_description" rows="5" placeholder="Paste the job description here to check how well the resume matches the role..."></textarea>
+                    </div>
+
+                    <button type="submit">Analyze resume <span>→</span></button>
+                </form>
+                <p class="privacy-note">Your file is used only for this analysis.</p>
+            </div>
+        </section>
+    </main>
+    <script>
+        const resumeInput = document.getElementById("resume");
+        const fileName = document.getElementById("file-name");
+        const fileHelp = document.getElementById("file-help");
+
+        resumeInput.addEventListener("change", () => {
+            const file = resumeInput.files[0];
+            if (!file) {
+                fileName.textContent = "Choose a resume file";
+                fileHelp.textContent = "PDF or DOCX · up to 5 MB";
+                return;
+            }
+
+            fileName.textContent = file.name;
+            fileHelp.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB selected`;
+        });
+    </script>
+</body>
+</html>

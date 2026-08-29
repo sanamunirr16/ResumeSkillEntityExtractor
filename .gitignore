@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+resume_history.db
+static/uploads/*
+.env

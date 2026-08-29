@@ -1,0 +1,30 @@
+skill,category
+Python,Programming
+Java,Programming
+C++,Programming
+SQL,Database
+MySQL,Database
+MongoDB,Database
+HTML,Web Development
+CSS,Web Development
+JavaScript,Web Development
+React,Web Development
+Angular,Web Development
+Node.js,Web Development
+Flask,Web Development
+Excel,Data Analysis
+Power BI,Data Analysis
+Tableau,Data Analysis
+Git,DevOps
+GitHub,DevOps
+AWS,Cloud
+Azure,Cloud
+Docker,DevOps
+Kubernetes,DevOps
+Machine Learning,Artificial Intelligence
+Deep Learning,Artificial Intelligence
+Data Science,Data Science
+Pandas,Data Science
+NumPy,Data Science
+DBMS,Database
+OOP,Programming

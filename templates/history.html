@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="page-shell dashboard-page">
+        <header class="topbar">
+            <a class="brand" href="/"><span class="brand-mark">R</span><span>RESUME SKILL ENTITY EXTRACTOR</span></a>
+            <a class="new-scan" href="/">+ New analysis</a>
+        </header>
+
+        <div class="dashboard-heading">
+            <div>
+                <p class="eyebrow">History</p>
+                <h1>Recent analyses</h1>
+                <p class="muted">Track previous resume scans and target-role fit.</p>
+            </div>
+        </div>
+
+        <section class="panel history-panel">
+            {% if entries %}
+                <div class="history-list">
+                    {% for entry in entries %}
+                        <article class="history-card">
+                            <div class="history-meta">
+                                <strong>{{ entry.filename }}</strong>
+                                <span>{{ entry.created_at }}</span>
+                            </div>
+                            <div class="history-body">
+                                <div>
+                                    <p class="history-label">Role</p>
+                                    <b>{{ entry.role_name or 'General review' }}</b>
+                                </div>
+                                <div>
+                                    <p class="history-label">Score</p>
+                                    <b>{{ entry.score }}/100</b>
+                                </div>
+                                <div>
+                                    <p class="history-label">Skills</p>
+                                    <b>{{ entry.skills|length }}</b>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">No analysis history yet.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
