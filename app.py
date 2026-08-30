@@ -17,8 +17,33 @@ app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "resume-skill-extractor-dev-key")
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024
 
-UPLOAD_FOLDER = "static/uploads"
-DATABASE_PATH = "resume_history.db"
+
+def get_upload_folder():
+    upload_folder = os.environ.get("UPLOAD_FOLDER")
+    if upload_folder:
+        return upload_folder
+
+    candidate = os.path.join(os.getcwd(), "static", "uploads")
+    if os.path.isdir(os.getcwd()) and os.access(os.getcwd(), os.W_OK):
+        return candidate
+
+    return os.path.join("/tmp", "resume-skill-extractor", "uploads")
+
+
+def get_database_path():
+    database_path = os.environ.get("DATABASE_PATH")
+    if database_path:
+        return database_path
+
+    candidate = os.path.join(os.getcwd(), "resume_history.db")
+    if os.path.isdir(os.getcwd()) and os.access(os.getcwd(), os.W_OK):
+        return candidate
+
+    return os.path.join("/tmp", "resume_history.db")
+
+
+UPLOAD_FOLDER = get_upload_folder()
+DATABASE_PATH = get_database_path()
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 SKILLS_FILE = "skills.csv"
