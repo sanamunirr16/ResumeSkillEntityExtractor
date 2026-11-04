@@ -49,33 +49,24 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 ALLOWED_EXTENSIONS = {"pdf", "docx"}
 SKILLS_FILE = "skills.csv"
 
-
 def init_db():
     conn = sqlite3.connect(DATABASE_PATH)
-    conn.execute(
-        """
+
+    conn.execute("""
         CREATE TABLE IF NOT EXISTS analyses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            created_at TEXT NOT NULL,
-            filename TEXT NOT NULL,
-            role_name TEXT,
-            score INTEGER NOT NULL,
-            skills TEXT NOT NULL,
-            job_matches TEXT NOT NULL,
-            jd_analysis TEXT
+            id INTEGER PRIMARY KEY AUTOINCREMENT
         )
-        """
-    )
-    conn.execute(
-        """
+    """)
+
+    conn.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             password_hash TEXT NOT NULL,
             created_at TEXT NOT NULL
         )
-        """
-    )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -107,19 +98,28 @@ def register_user(username, password):
         return False
 
     normalized_name = username.strip()
+
     if len(normalized_name) < 3 or len(password) < 6:
         return False
 
     conn = sqlite3.connect(DATABASE_PATH)
+
     try:
         conn.execute(
             "INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?)",
-            (normalized_name, generate_password_hash(password), datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+            (
+                normalized_name,
+                generate_password_hash(password),
+                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            ),
         )
+
         conn.commit()
         return True
+
     except sqlite3.IntegrityError:
         return False
+
     finally:
         conn.close()
 
@@ -399,7 +399,6 @@ def login():
 
     return render_template("login.html")
 
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -409,14 +408,19 @@ def register():
 
         if not username or not password:
             flash("Username and password are required.")
+
         elif len(username) < 3:
             flash("Username must be at least 3 characters long.")
+
         elif len(password) < 6:
             flash("Password must be at least 6 characters long.")
+
         elif password != confirm_password:
             flash("Passwords do not match.")
+
         elif not register_user(username, password):
             flash("That username is already taken.")
+
         else:
             flash("Registration successful. Please log in.")
             return redirect(url_for("login"))

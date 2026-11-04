@@ -1,6 +1,6 @@
 TRANSLATIONS = {
     "en": {
-        "app_title": "Resume Skill Extractor",
+        "app_title": "Resume Skill Entity Extractor",
         "home": "Home",
         "login": "Login",
         "register": "Register",
