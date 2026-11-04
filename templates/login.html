@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Resume Skill Extractor</title>
+    <title>{{ t["login_page_title"] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="language-switcher">
+    <label for="language">{{ t["select_language"] }}</label>
+
+    <select id="language"
+            onchange="window.location.href='/set-language/' + this.value">
+
+        <option value="en"
+            {% if session.get('language', 'en') == 'en' %}selected{% endif %}>
+            English
+        </option>
+
+        <option value="kn"
+            {% if session.get('language') == 'kn' %}selected{% endif %}>
+            ಕನ್ನಡ
+        </option>
+
+        <option value="hi"
+            {% if session.get('language') == 'hi' %}selected{% endif %}>
+            हिन्दी
+        </option>
+    </select>
+</div>
+</select>
     <main class="page-shell auth-page">
         <header class="topbar auth-topbar">
             <a class="brand" href="/">
                 <span class="brand-mark">R</span>
-                <span>RESUME SKILL ENTITY EXTRACTOR</span>
+                <span>{{ t["app_title"] }}</span>
             </a>
         </header>
 
         <section class="auth-wrapper">
             <div class="auth-card">
-                <p class="eyebrow">Welcome back</p>
-                <h1>Login to your resume skill entity extractor</h1>
+                <p class="eyebrow">{{ t["welcome_back"] }}</p>
+                <h1>{{ t["login_heading"] }}</h1>
 
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -31,18 +54,18 @@
                 {% endwith %}
 
                 <form method="post" action="{{ url_for('login') }}" class="auth-form">
-                    <label for="username">Username</label>
+                    <label for="username">{{ t["username"] }}</label>
                     <input id="username" name="username" type="text" placeholder="Enter your username" required>
 
-                    <label for="password">Password</label>
+                    <label for="password">{{ t["password"] }}</label>
                     <input id="password" name="password" type="password" placeholder="Enter your password" required>
 
-                    <button type="submit">Log in</button>
+                    <button type="submit">{{ t["login"] }}</button>
                 </form>
 
                 <p class="auth-switch">
-                    Need an account?
-                    <a href="{{ url_for('register') }}">Create one</a>
+                  {{ t["need_account"] }}
+                    <a href="{{ url_for('register') }}">{{ t["create_account"] }}</a>
                 </p>
             </div>
         </section>

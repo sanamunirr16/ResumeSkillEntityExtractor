@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Resume Skill Extractor</title>
+    <title>Register | {{t["app_title"]}}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -11,14 +11,14 @@
         <header class="topbar auth-topbar">
             <a class="brand" href="/">
                 <span class="brand-mark">R</span>
-                <span>RESUME SKILL ENTITY EXTRACTOR</span>
+                <span>{{ t["app_title"] }}</span>
             </a>
         </header>
 
         <section class="auth-wrapper">
             <div class="auth-card">
-                <p class="eyebrow">Create account</p>
-                <h1>Register for access</h1>
+                <p class="eyebrow">{{ t["create_account"] }}</p>
+                <h1>{{ t["register_heading"] }}</h1>
 
                 {% with messages = get_flashed_messages() %}
                     {% if messages %}
@@ -31,21 +31,21 @@
                 {% endwith %}
 
                 <form method="post" action="{{ url_for('register') }}" class="auth-form">
-                    <label for="username">Username</label>
+                    <label for="username">{{t["username"] }}</label>
                     <input id="username" name="username" type="text" placeholder="Choose a username" required>
 
-                    <label for="password">Password</label>
+                    <label for="password">{{ t["password"]}}</label>
                     <input id="password" name="password" type="password" placeholder="Minimum 6 characters" required>
 
-                    <label for="confirm_password">Confirm password</label>
+                    <label for="confirm_password">{{ t["confirm_password"] }}</label>
                     <input id="confirm_password" name="confirm_password" type="password" placeholder="Re-enter your password" required>
 
-                    <button type="submit">Create account</button>
+                    <button type="submit">{{ t["create_account"] }}</button>
                 </form>
 
                 <p class="auth-switch">
-                    Already have an account?
-                    <a href="{{ url_for('login') }}">Log in</a>
+                     {{ t["already_account"] }}
+                    <a href="{{ url_for('login') }}">{{ t["login"] }}</a>
                 </p>
             </div>
         </section>

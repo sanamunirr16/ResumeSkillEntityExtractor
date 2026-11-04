@@ -3,58 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RESUME SKILL ENTITY EXTRACTOR</title>
+    <title>{{ t["app_title"] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <main class="page-shell dashboard-page">
         <header class="topbar">
-            <a class="brand" href="/"><span class="brand-mark">R</span><span>RESUME SKILL ENTITY EXTRACTOR</span></a>
+            <a class="brand" href="/"><span class="brand-mark">R</span><span>{{ t["app_title"] }}</span></a>
             <div class="header-actions">
-                <a class="new-scan" href="/history">View history</a>
-                <a class="new-scan" href="/">+ New analysis</a>
+                <a class="new-scan" href="/history">{{ t["history"] }}</a>
+                <a class="new-scan" href="/"> {{ t["new_analysis"] }}</a>
             </div>
         </header>
 
         <div class="dashboard-heading">
             <div>
-                <p class="eyebrow">Analysis complete</p>
-                <h1>Your resume snapshot</h1>
-                <p class="muted">A quick read on your current skills and career alignment.</p>
+                <p class="eyebrow">{{ t["analysis_complete"] }}</p>
+                <h1>{{ t ["resume_snapshot"] }}</h1>
+                <p class="muted">{{ t["snapshot_description"] }}</p>
             </div>
-            <span class="date-label">LIVE RESULT</span>
+            <span class="date-label">{{ t["live_result"]}}</span>
         </div>
 
         <section class="metrics-grid">
             <article class="metric-card score-card">
                 <div class="score-ring"><span>{{ score }}</span></div>
-                <div><p class="metric-label">Resume score</p><h2>Out of 100</h2><p class="metric-help">Based on skills and resume sections</p></div>
+                <div><p class="metric-label">{{ t["resume_score"] }}</p><h2>{{ t["out_of_100"] }}</h2><p class="metric-help">{{ t["score_description"] }}</p></div>
             </article>
             <article class="metric-card accent-card">
-                <p class="metric-label">Skills detected</p>
+                <p class="metric-label">{{ t["skills_detected"] }}</p>
                 <strong>{{ skills|length }}</strong>
-                <p class="metric-help">Technical capabilities found in your CV</p>
+                <p class="metric-help">{{ t["skills_description"] }}</p>
             </article>
             <article class="metric-card warm-card">
-                <p class="metric-label">Roles evaluated</p>
+                <p class="metric-label">{{ t["roles_evaluated"] }}</p>
                 <strong>{{ job_matches|length }}</strong>
-                <p class="metric-help">Career paths compared against your profile</p>
+                <p class="metric-help">{{ t["roles_description"]}}</p>
             </article>
         </section>
 
         <section class="content-grid">
             <article class="panel skills-panel">
-                <div class="panel-heading"><div><p class="eyebrow">Your toolkit</p><h2>Extracted skills</h2></div><span class="count-badge">{{ skills|length }}</span></div>
+                <div class="panel-heading"><div><p class="eyebrow">{{ t["your_toolkit"]}}</p><h2>{{ t["extracted_skills"]}}</h2></div><span class="count-badge">{{ skills|length }}</span></div>
                 <div class="skill-cloud">
-                    {% for skill in skills %}<span>{{ skill }}</span>{% else %}<p class="muted">No skills were detected.</p>{% endfor %}
+                    {% for skill in skills %}<span>{{ skill }}</span>{% else %}<p class="mute">{{ t["no_skills_detected"] }}</p>{% endfor %}
                 </div>
             </article>
 
             <article class="panel breakdown-panel">
-                <div class="panel-heading"><div><p class="eyebrow">Scoring model</p><h2>Score breakdown</h2></div></div>
+                <div class="panel-heading"><div><p class="eyebrow">{{ t["scoring_model"] }}</p><h2>{{ t["score_breakdown"] }}</h2></div></div>
                 <div class="breakdown-list">
                     {% for category, values in score_breakdown.items() %}
-                        <div class="breakdown-item"><div><span>{{ category }}</span><b>{{ values[0] }}/{{ values[1] }}</b></div><progress class="progress" value="{{ values[0] }}" max="{{ values[1] }}">{{ values[0] }}/{{ values[1] }}</progress></div>
+                        <div class="breakdown-item"><div>{{ t.get({
+    'Technical skills': 'technical_skills',
+    'Education': 'education',
+    'Experience': 'experience',
+    'Projects': 'projects',
+    'Certifications': 'certifications'
+}.get(category, ''), category) }}<b>{{ values[0] }}/{{ values[1] }}</b></div><progress class="progress" value="{{ values[0] }}" max="{{ values[1] }}">{{ values[0] }}/{{ values[1] }}</progress></div>
                     {% endfor %}
                 </div>
             </article>
@@ -64,8 +70,8 @@
             <section class="panel jd-panel">
                 <div class="panel-heading">
                     <div>
-                        <p class="eyebrow">JD analysis</p>
-                        <h2>{% if jd_analysis.job_title %}{{ jd_analysis.job_title }}{% else %}Job description match{% endif %}</h2>
+                        <p class="eyebrow">{{ t["jd_analysis"] }}</p>
+                        <h2>{% if jd_analysis.job_title %}{{ jd_analysis.job_title }}{% else %}{{ t["job_description_match"] }}{% endif %}</h2>
                     </div>
                     <span class="count-badge">{{ jd_analysis.match_percentage }}%</span>
                 </div>
@@ -73,11 +79,11 @@
                 <div class="jd-summary">
                     <div class="jd-score-box">
                         <strong>{{ jd_analysis.match_percentage }}%</strong>
-                        <span>Role match</span>
+                        <span>{{ t["role_match"] }}</span>
                     </div>
                     <div class="jd-list-wrap">
                         <div class="jd-list">
-                            <h3>Matched skills</h3>
+                            <h3>{{ t["matched_skills"] }}</h3>
                             {% if jd_analysis.matched_skills %}
                                 <ul>
                                     {% for skill in jd_analysis.matched_skills %}
@@ -85,11 +91,11 @@
                                     {% endfor %}
                                 </ul>
                             {% else %}
-                                <p class="muted">No matching skills found in the job description.</p>
+                                <p class="muted">{{ t["no_matching_skills"] }}</p>
                             {% endif %}
                         </div>
                         <div class="jd-list">
-                            <h3>Missing skills</h3>
+                            <h3>{{ t["missing_skills"] }}</h3>
                             {% if jd_analysis.missing_skills %}
                                 <ul>
                                     {% for skill in jd_analysis.missing_skills %}
@@ -97,7 +103,7 @@
                                     {% endfor %}
                                 </ul>
                             {% else %}
-                                <p class="muted">No major gaps found.</p>
+                                <p class="muted">{{ t["no_major_gaps"] }}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -109,8 +115,8 @@
             <section class="panel ats-panel">
                 <div class="panel-heading">
                     <div>
-                        <p class="eyebrow">ATS check</p>
-                        <h2>Application tracking score</h2>
+                        <p class="eyebrow">{{ t["ats_check"] }}</p>
+                        <h2>{{ t["ats_score_title"] }}</h2>
                     </div>
                     <span class="count-badge">{{ ats_analysis.ats_score }}%</span>
                 </div>
@@ -118,19 +124,19 @@
                 <div class="ats-summary">
                     <div class="jd-score-box ats-box">
                         <strong>{{ ats_analysis.ats_score }}%</strong>
-                        <span>ATS score</span>
+                        <span>{{ t["ats_score"] }}</span>
                     </div>
 
                     <div class="ats-metrics">
-                        <div><span>Keyword coverage</span><strong>{{ ats_analysis.keyword_score }}%</strong></div>
-                        <div><span>Section structure</span><strong>{{ ats_analysis.section_score }}%</strong></div>
-                        <div><span>Formatting</span><strong>{{ ats_analysis.formatting_score }}%</strong></div>
-                        <div><span>Clarity</span><strong>{{ ats_analysis.clarity_score }}%</strong></div>
+                        <div><span>{{ t["keyword_coverage"] }}</span><strong>{{ ats_analysis.keyword_score }}%</strong></div>
+                        <div><span>{{ t["section_structure"] }}</span><strong>{{ ats_analysis.section_score }}%</strong></div>
+                        <div><span>{{ t["formatting"] }}</span><strong>{{ ats_analysis.formatting_score }}%</strong></div>
+                        <div><span>{{ t["clarity"] }}</span><strong>{{ ats_analysis.clarity_score }}%</strong></div>
                     </div>
                 </div>
 
                 <div class="ats-tips">
-                    <h3>ATS recommendations</h3>
+                    <h3>{{ t["ats_recommendations"] }}</h3>
                     <ul>
                         {% for tip in ats_analysis.recommendations %}
                             <li>{{ tip }}</li>
@@ -141,10 +147,18 @@
         {% endif %}
 
         <section class="panel roles-panel">
-            <div class="panel-heading"><div><p class="eyebrow">Career alignment</p><h2>Job role match</h2></div><span class="muted">Based on extracted skills</span></div>
+            <div class="panel-heading"><div><p class="eyebrow">{{ t["career_alignment"] }}</p><h2>{{ t["job_role_match"] }}</h2></div><span class="muted">{{ t["based_on_skills"] }}</span></div>
             <div class="role-grid">
                 {% for role, percentage in job_matches.items() %}
-                    <div class="role-card"><div class="role-top"><strong>{{ role }}</strong><b>{{ percentage }}%</b></div><progress class="progress" value="{{ percentage }}" max="100">{{ percentage }}%</progress></div>
+                    <div class="role-card"><div class="role-top"><strong>
+    {{ t.get({
+        'Software Developer': 'software_developer',
+        'Python Developer': 'python_developer',
+        'Full Stack Developer': 'full_stack_developer',
+        'Data Analyst': 'data_analyst',
+        'Data Scientist': 'data_scientist'
+    }.get(role, ''), role) }}
+</strong><b>{{ percentage }}%</b></div><progress class="progress" value="{{ percentage }}" max="100">{{ percentage }}%</progress></div>
                 {% endfor %}
             </div>
         </section>

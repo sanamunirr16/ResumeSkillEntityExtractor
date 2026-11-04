@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume History</title>
+    <title>{{ t["history"]}}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <main class="page-shell dashboard-page">
         <header class="topbar">
-            <a class="brand" href="/"><span class="brand-mark">R</span><span>RESUME SKILL ENTITY EXTRACTOR</span></a>
-            <a class="new-scan" href="/">+ New analysis</a>
+            <a class="brand" href="/"><span class="brand-mark">R</span><span>{{ t["app_title"] }}</span></a>
+            <a class="new-scan" href="/">+ {{ t["analyze"] }}</a>
         </header>
 
         <div class="dashboard-heading">
             <div>
-                <p class="eyebrow">History</p>
-                <h1>Recent analyses</h1>
-                <p class="muted">Track previous resume scans and target-role fit.</p>
+                <p class="eyebrow">{{ t["history"] }}</p>
+                <h1>{{ t["recent_analyses"] }}</h1>
+                <p class="muted">{{ t["history_description"] }}</p>
             </div>
         </div>
 
@@ -32,15 +32,15 @@
                             </div>
                             <div class="history-body">
                                 <div>
-                                    <p class="history-label">Role</p>
-                                    <b>{{ entry.role_name or 'General review' }}</b>
+                                    <p class="history-label">{{ t["role"] }}</p>
+                                    <b>{{ entry.role_name or t["general_review"] }}</b>
                                 </div>
                                 <div>
-                                    <p class="history-label">Score</p>
+                                    <p class="history-label">{{ t["score"] }}</p>
                                     <b>{{ entry.score }}/100</b>
                                 </div>
                                 <div>
-                                    <p class="history-label">Skills</p>
+                                    <p class="history-label">{{ t["skills"] }}</p>
                                     <b>{{ entry.skills|length }}</b>
                                 </div>
                             </div>
@@ -48,7 +48,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p class="muted">No analysis history yet.</p>
+                <p class="muted">{{ t["no_history"] }}</p>
             {% endif %}
         </section>
     </main>

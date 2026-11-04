@@ -12,6 +12,7 @@ from datetime import datetime
 from uuid import uuid4
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+from translations import TRANSLATIONS
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "resume-skill-extractor-dev-key")
@@ -80,6 +81,25 @@ def init_db():
 
 
 init_db()
+
+
+@app.context_processor
+def inject_translations():
+    language = session.get("language", "en")
+
+    return {
+        "t": TRANSLATIONS.get(
+            language,
+            TRANSLATIONS["en"]
+        )
+    }
+
+@app.route("/set-language/<language>")
+def set_language(language):
+    if language in TRANSLATIONS:
+        session["language"] = language
+
+    return redirect(request.referrer or url_for("home"))
 
 
 def register_user(username, password):
@@ -229,8 +249,15 @@ def calculate_ats_score(resume_text, job_description="", selected_role=None):
     if formatting_score < 80:
         recommendations.append("Use a simple, ATS-friendly layout with clean headings and no text boxes or graphics.")
     if not recommendations:
-        recommendations.append("Your resume structure is already ATS-friendly. Keep it concise and keyword-aligned.")
+     language = session.get("language", "en")
 
+    default_recommendations = {
+        "en": "Your resume structure is already ATS-friendly. Keep it concise and keyword-aligned.",
+        "kn": "ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ರಚನೆಯು ಈಗಾಗಲೇ ATS ಸ್ನೇಹಿಯಾಗಿದೆ. ಅದನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ಮತ್ತು ಸೂಕ್ತ ಕೀವರ್ಡ್‌ಗಳೊಂದಿಗೆ ಇರಿಸಿ.",
+        "hi": "आपके रिज़्यूमे की संरचना पहले से ही ATS-अनुकूल है। इसे संक्षिप्त और उपयुक्त कीवर्ड के साथ रखें।"
+    }
+
+    recommendations.append(default_recommendations.get(language, default_recommendations["en"]))
     return {
         "ats_score": ats_score,
         "keyword_score": keyword_score,

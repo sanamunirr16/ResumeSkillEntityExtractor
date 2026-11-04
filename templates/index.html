@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RESUME SKILL ENTITY EXTRACTOR</title>
+    <title>{{ t["app_title"] }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -11,31 +11,31 @@
         <header class="topbar">
             <a class="brand" href="/">
                 <span class="brand-mark">R</span>
-                <span>RESUME SKILL ENTITY EXTRACTOR</span>
+                <span>{{ t["app_title"] }}</span>
             </a>
             <div class="header-actions">
-                <a class="new-scan" href="/history">View history</a>
-                <span class="status-pill"><span></span> Skill intelligence</span>
+                <a class="new-scan" href="/history">{{ t["history"] }}</a>
+                <span class="status-pill"><span></span> {{ t["skill_intelligence"] }}</span>
             </div>
         </header>
 
         <section class="welcome-grid">
             <div class="intro-copy">
-                <p class="eyebrow">Resume analysis workspace</p>
-                <h1>Understand your resume. <em>Shape your future.</em></h1>
-                <p class="intro-text">Extract your strongest skills, measure resume quality, and discover the career paths that fit your profile.</p>
+                <p class="eyebrow">{{ t["workspace_title"] }}</p>
+                <h1>{{ t["understand_resume"] }} <em>{{ t["shape_future"] }}</em></h1>
+                <p class="intro-text">{{ t["workspace_description"] }}</p>
                 <div class="feature-row">
-                    <span>01 <b>Extract</b></span>
-                    <span>02 <b>Score</b></span>
-                    <span>03 <b>Match</b></span>
+                    <span>01 <b>{{ t["extract"] }}</b></span>
+                    <span>02 <b>{{ t["score"]}}</b></span>
+                    <span>03 <b>{{ t["match"]}}</b></span>
                 </div>
             </div>
 
             <div class="upload-card">
                 <div class="card-heading">
                     <div>
-                        <p class="eyebrow">Start a new scan</p>
-                        <h2>Upload your resume</h2>
+                        <p class="eyebrow">{{ t["start_new_scan"] }}</p>
+                        <h2>{{ t["upload_resume"] }}</h2>
                     </div>
                     <span class="upload-icon">↥</span>
                 </div>
@@ -53,15 +53,15 @@
                 <form action="/upload" method="post" enctype="multipart/form-data">
                     <label class="drop-zone" for="resume">
                         <span class="file-symbol">PDF<br><small>DOCX</small></span>
-                        <strong id="file-name">Choose a resume file</strong>
-                        <span id="file-help">PDF or DOCX · up to 5 MB</span>
+                        <strong id="file-name">{{ t["choose_file"] }}</strong>
+                        <span id="file-help">{{ t["file_help"] }}</span>
                         <input id="resume" type="file" name="resume" accept=".pdf,.docx" required>
                     </label>
 
                     <div class="job-fields">
-                        <label for="job_role">Target role</label>
+                        <label for="job_role">{{ t["job_role"] }}</label>
                         <select id="job_role" name="job_role">
-                            <option value="">Optional: choose a role</option>
+                            <option value="">{{ t["optional_role"] }}</option>
                             <option>Software Developer</option>
                             <option>Python Developer</option>
                             <option>Full Stack Developer</option>
@@ -69,13 +69,13 @@
                             <option>Data Scientist</option>
                         </select>
 
-                        <label for="job_description">Job description</label>
-                        <textarea id="job_description" name="job_description" rows="5" placeholder="Paste the job description here to check how well the resume matches the role..."></textarea>
+                        <label for="job_description">{{ t["job_description"] }}</label>
+                        <textarea id="job_description" name="job_description" rows="5" placeholder="{{ t['job_description_placeholder'] }}"></textarea>
                     </div>
 
-                    <button type="submit">Analyze resume <span>→</span></button>
+                    <button type="submit">{{ t["analyze"]}}  <span>→</span></button>
                 </form>
-                <p class="privacy-note">Your file is used only for this analysis.</p>
+                <p class="privacy-note">{{ t["privacy_note"] }}</p>
             </div>
         </section>
     </main>
@@ -87,8 +87,8 @@
         resumeInput.addEventListener("change", () => {
             const file = resumeInput.files[0];
             if (!file) {
-                fileName.textContent = "Choose a resume file";
-                fileHelp.textContent = "PDF or DOCX · up to 5 MB";
+                fileName.textContent = '{{ t["choose_file"] }}';
+                fileHelp.textContent = '{{ t["file_help"] }}';
                 return;
             }
 

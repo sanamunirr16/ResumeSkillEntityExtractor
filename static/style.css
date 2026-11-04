@@ -18,3 +18,43 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.45;ba
 .progress::-webkit-progress-bar{border-radius:10px;background:#e8eee8}
 .progress::-webkit-progress-value{border-radius:10px;background:var(--green)}
 .progress::-moz-progress-bar{border-radius:10px;background:var(--green)}
+
+
+/* Language Switcher */
+.language-switcher {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    max-width: 1380px;
+    margin: 15px auto;
+    padding: 0 24px;
+}
+
+.language-switcher label {
+    color: #71827d;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.language-switcher select {
+    padding: 11px 16px;
+    border: 1px solid #dce7df;
+    border-radius: 12px;
+    background: #fff;
+    color: #192824;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.language-switcher select:hover {
+    border-color: #2e705b;
+}
+
+.language-switcher select:focus {
+    border-color: #2e705b;
+    box-shadow: 0 0 0 3px rgba(46, 112, 91, 0.12);
+}
