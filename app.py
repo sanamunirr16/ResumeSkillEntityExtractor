@@ -237,27 +237,58 @@ def calculate_ats_score(resume_text, job_description="", selected_role=None):
 
     ats_score = round(keyword_score * 0.45 + section_score * 0.25 + formatting_score * 0.2 + clarity_score * 0.1)
 
+    language = session.get("language", "en")
     recommendations = []
-    if missing_skills:
-        recommendations.append(f"Add the missing keywords: {', '.join(missing_skills[:5])}.")
-    if "skills" not in text_lower:
-        recommendations.append("Create a dedicated Skills section with clear technical keywords.")
-    if "experience" not in text_lower:
-        recommendations.append("Add detailed work experience with dates, role titles, and responsibilities.")
-    if "education" not in text_lower:
-        recommendations.append("Include an Education section using standard headings like Education or Qualifications.")
-    if formatting_score < 80:
-        recommendations.append("Use a simple, ATS-friendly layout with clean headings and no text boxes or graphics.")
-    if not recommendations:
-     language = session.get("language", "en")
 
-    default_recommendations = {
-        "en": "Your resume structure is already ATS-friendly. Keep it concise and keyword-aligned.",
-        "kn": "ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ರಚನೆಯು ಈಗಾಗಲೇ ATS ಸ್ನೇಹಿಯಾಗಿದೆ. ಅದನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ಮತ್ತು ಸೂಕ್ತ ಕೀವರ್ಡ್‌ಗಳೊಂದಿಗೆ ಇರಿಸಿ.",
-        "hi": "आपके रिज़्यूमे की संरचना पहले से ही ATS-अनुकूल है। इसे संक्षिप्त और उपयुक्त कीवर्ड के साथ रखें।"
+    messages = {
+        "en": {
+            "missing": "Add the missing keywords: {}.",
+            "skills": "Create a dedicated Skills section with clear technical keywords.",
+            "experience": "Add detailed work experience with dates, role titles, and responsibilities.",
+            "education": "Include an Education section using standard headings like Education or Qualifications.",
+            "formatting": "Use a simple, ATS-friendly layout with clean headings and no text boxes or graphics.",
+            "default": "Your resume structure is already ATS-friendly. Keep it concise and keyword-aligned."
+        },
+        "kn": {
+            "missing": "ಕಾಣೆಯಾದ ಕೀವರ್ಡ್‌ಗಳನ್ನು ಸೇರಿಸಿ: {}.",
+            "skills": "ಸ್ಪಷ್ಟ ತಾಂತ್ರಿಕ ಕೀವರ್ಡ್‌ಗಳೊಂದಿಗೆ ಪ್ರತ್ಯೇಕ ಕೌಶಲ್ಯಗಳ ವಿಭಾಗವನ್ನು ರಚಿಸಿ.",
+            "experience": "ದಿನಾಂಕಗಳು, ಹುದ್ದೆಗಳು ಮತ್ತು ಜವಾಬ್ದಾರಿಗಳೊಂದಿಗೆ ಕೆಲಸದ ಅನುಭವವನ್ನು ಸೇರಿಸಿ.",
+            "education": "ಶಿಕ್ಷಣ ಅಥವಾ ಅರ್ಹತೆಗಳ ವಿಭಾಗವನ್ನು ಸೇರಿಸಿ.",
+            "formatting": "ಸರಳ ಶೀರ್ಷಿಕೆಗಳೊಂದಿಗೆ ATS ಸ್ನೇಹಿ ವಿನ್ಯಾಸವನ್ನು ಬಳಸಿ.",
+            "default": "ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ರಚನೆಯು ಈಗಾಗಲೇ ATS ಸ್ನೇಹಿಯಾಗಿದೆ. ಅದನ್ನು ಸಂಕ್ಷಿಪ್ತವಾಗಿ ಮತ್ತು ಸೂಕ್ತ ಕೀವರ್ಡ್‌ಗಳೊಂದಿಗೆ ಇರಿಸಿ."
+        },
+        "hi": {
+            "missing": "छूटे हुए कीवर्ड जोड़ें: {}।",
+            "skills": "स्पष्ट तकनीकी कीवर्ड के साथ एक अलग कौशल अनुभाग बनाएं।",
+            "experience": "तारीखों, पदों और जिम्मेदारियों के साथ कार्य अनुभव जोड़ें।",
+            "education": "शिक्षा या योग्यता अनुभाग शामिल करें।",
+            "formatting": "स्पष्ट शीर्षकों के साथ सरल ATS-अनुकूल लेआउट का उपयोग करें।",
+            "default": "आपके रिज़्यूमे की संरचना पहले से ही ATS-अनुकूल है। इसे संक्षिप्त और उपयुक्त कीवर्ड के साथ रखें।"
+        }
     }
 
-    recommendations.append(default_recommendations.get(language, default_recommendations["en"]))
+    msg = messages.get(language, messages["en"])
+
+    if missing_skills:
+        recommendations.append(
+            msg["missing"].format(", ".join(missing_skills[:5]))
+        )
+
+    if "skills" not in text_lower:
+        recommendations.append(msg["skills"])
+
+    if "experience" not in text_lower:
+        recommendations.append(msg["experience"])
+
+    if "education" not in text_lower:
+        recommendations.append(msg["education"])
+
+    if formatting_score < 80:
+        recommendations.append(msg["formatting"])
+
+    if not recommendations:
+        recommendations.append(msg["default"])
+
     return {
         "ats_score": ats_score,
         "keyword_score": keyword_score,
@@ -268,6 +299,7 @@ def calculate_ats_score(resume_text, job_description="", selected_role=None):
         "missing_skills": missing_skills,
         "recommendations": recommendations[:4],
     }
+   
 
 
 def save_analysis_record(filename, role_name, score, skills, job_matches, jd_analysis=None):
