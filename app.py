@@ -53,10 +53,17 @@ def init_db():
     conn = sqlite3.connect(DATABASE_PATH)
 
     conn.execute("""
-        CREATE TABLE IF NOT EXISTS analyses (
-            id INTEGER PRIMARY KEY AUTOINCREMENT
-        )
-    """)
+    CREATE TABLE IF NOT EXISTS analyses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        created_at TEXT NOT NULL,
+        filename TEXT NOT NULL,
+        role_name TEXT,
+        score INTEGER,
+        skills TEXT,
+        job_matches TEXT,
+        jd_analysis TEXT
+    )
+""")
 
     conn.execute("""
         CREATE TABLE IF NOT EXISTS users (
