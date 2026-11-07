@@ -379,9 +379,8 @@ job_roles = {
 # Home page
 @app.route("/")
 def home():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("index.html")
+    session.clear()
+    return redirect(url_for("login"))
 
 
 @app.route("/login", methods=["GET", "POST"])
